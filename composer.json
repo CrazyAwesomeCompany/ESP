@@ -1,0 +1,17 @@
+{
+    "name": "cac/esp",
+    "description": "Crazy Awesome Email Service Provider Library",
+    "keywords": ["Email Service Provider", "esp", "email"],
+    "homepage": "http://www.crazyawesomecompany.com",
+    "license": "proprietary",
+    "support": {
+        "issues": "https://github.com/CrazyAwesomeCompany/ESP/issues",
+        "source": "https://github.com/CrazyAwesomeCompany/ESP"
+    },
+    "autoload": {
+        "psr-0": {
+            "\\CAC\\Component\\ESP": "lib/"
+        },
+        "classmap": [ "lib/" ]
+    }
+}
