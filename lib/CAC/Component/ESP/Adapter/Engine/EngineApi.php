@@ -2,6 +2,10 @@
 
 namespace CAC\Component\ESP\Adapter\Engine;
 
+use Psr\Log\LoggerInterface;
+
+use Psr\Log\LoggerAwareInterface;
+
 /**
  * E-Ngine API Client
  *
@@ -14,7 +18,7 @@ namespace CAC\Component\ESP\Adapter\Engine;
  * @todo Implement `Subscriber_sendMailingToSubscribers`
  *
  */
-class EngineApi
+class EngineApi implements LoggerAwareInterface
 {
     /**
      * Api connection
@@ -172,8 +176,15 @@ class EngineApi
         array_shift($args);
 
         try {
+            if ($this->logger) {
+                $this->logger->debug(sprintf("E-Ngine API call: %s -> %s", $method, json_encode($args)));
+            }
+
             $result = call_user_func_array(array($this->getConnection(), $method), $args);
         } catch (\SoapFault $e) {
+            if ($this->logger) {
+                $this->logger->error(sprintf("E-Ngine API error: %s", $e->getMessage()));
+            }
             // Convert to EngineApiException
             throw new EngineApiException($e->getMessage(), $e->getCode(), $e->getPrevious());
         }
@@ -205,5 +216,15 @@ class EngineApi
         }
 
         return $this->connection;
+    }
+
+    /**
+     * Set the logger
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

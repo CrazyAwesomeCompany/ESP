@@ -2,9 +2,15 @@
 
 namespace CAC\Component\ESP;
 
+use Psr\Log\LoggerInterface;
+
+use Psr\Log\setLogger;
+
+use Psr\Log\LoggerAwareInterface;
+
 use CAC\Component\ESP\MailinglistAdapterInterface;
 
-class MailinglistClient
+class MailinglistClient implements LoggerAwareInterface
 {
     /**
      * The ESP Adapter
@@ -12,6 +18,11 @@ class MailinglistClient
      * @var MailinglistAdapterInterface
      */
     private $adapter;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(MailinglistAdapterInterface $adapter)
     {
@@ -31,8 +42,12 @@ class MailinglistClient
         $result = $this->adapter->unsubscribe($user);
     }
 
-
-
-
-
+    /**
+     * (non-PHPdoc)
+     * @see \Psr\Log\LoggerAwareInterface::setLogger()
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 }

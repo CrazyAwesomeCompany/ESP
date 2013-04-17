@@ -1,4 +1,10 @@
+# Composer files
+composer.phar
+composer.lock
+vendor
+
 # IDE files
 .settings
 .project
 .buildpath
+
