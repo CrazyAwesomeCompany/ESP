@@ -59,10 +59,10 @@ class EngineApi
      */
     public function subscribeUser(array $user, $mailinglistId, $confirmed = false)
     {
-        $result = $this->performRequest('Subscriber_set', $user, $confirmed, $mailinglistId);
+        $result = $this->performRequest('Subscriber_set', $user, !$confirmed, $mailinglistId);
 
-        if (!in_array($result, array('OK_UPDATED', 'OK_CONFIRMED', 'OK_BEDANKT'))) {
-            $e = new EngineApiException('User not subscribed to mailinglist');
+        if (!in_array($result, array('OK_UPDATED', 'OK_CONFIRM', 'OK_BEDANKT'))) {
+            $e = new EngineApiException(sprintf('User not subscribed to mailinglist. Engine Result: [%s]', $result));
             $e->setEngineCode($result);
 
             throw $e;
@@ -76,18 +76,18 @@ class EngineApi
      *
      * @param string  $email         The emailaddress to unsubscribe
      * @param integer $mailinglistId The mailinglist id to unsubscribe the user from
-     * @param bool    $confirm       Send a confirmation mail to unsubscribe
+     * @param bool    $confirmed     Is the unsubscription already confirmed
      *
      * @return string
      *
      * @throws EngineApiException
      */
-    public function unsubscribeUser($email, $mailinglistId, $confirm = true)
+    public function unsubscribeUser($email, $mailinglistId, $confirmed = false)
     {
-        $result = $this->performRequest('Subscriber_unsubscribe', $email, $confirm, $mailinglistId);
+        $result = $this->performRequest('Subscriber_unsubscribe', $email, !$confirmed, $mailinglistId);
 
         if (!in_array($result, array('OK', 'OK_CONFIRM'))) {
-            $e = new EngineApiException('User not unsubscribed from mailinglist');
+            $e = new EngineApiException(sprintf('User not unsubscribed from mailinglist. Engine Result: [%s]', $result));
             $e->setEngineCode($result);
 
             throw $e;

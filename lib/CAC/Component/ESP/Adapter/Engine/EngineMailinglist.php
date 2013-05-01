@@ -16,7 +16,11 @@ class EngineMailinglist implements MailinglistAdapterInterface
     public function __construct(EngineApi $api)
     {
         $this->api = $api;
-        $this->options = array('mailinglist' => 2);
+        $this->options = array(
+            'mailinglist' => 2,
+            'confirmed' => false,
+
+        );
     }
 
 
@@ -29,7 +33,13 @@ class EngineMailinglist implements MailinglistAdapterInterface
             $mailinglistId = $this->options['mailinglist'];
         }
 
-        return $this->api->subscribeUser($user, $mailinglistId);
+        if (isset($user['confirmed'])) {
+            $confirmed = $user['confirmed'];
+        } else {
+            $confirmed = $this->options['confirmed'];
+        }
+
+        return $this->api->subscribeUser($user, $mailinglistId, $confirmed);
     }
 
     public function unsubscribe($user) {
@@ -40,16 +50,22 @@ class EngineMailinglist implements MailinglistAdapterInterface
             $mailinglistId = $this->options['mailinglist'];
         }
 
+        if (isset($user['confirmed'])) {
+            $confirmed = $user['confirmed'];
+        } else {
+            $confirmed = $this->options['confirmed'];
+        }
+
         if (!isset($user['email'])) {
             // @todo throw exception
 
             return false;
         }
 
-        return $this->api->unsubscribeUser($user['email'], $mailinglistId);
+        return $this->api->unsubscribeUser($user['email'], $mailinglistId, $confirmed);
     }
 
-    public function getUnsubscriptions($options) {
+    public function getUnsubscriptions($options = array()) {
         // TODO: Auto-generated method stub
         $from = new \DateTime();
         $from->sub(new \DateInterval('P1D'));
