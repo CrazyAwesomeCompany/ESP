@@ -2,6 +2,10 @@
 
 namespace CAC\Component\ESP\Adapter\Engine;
 
+use Psr\Log\LoggerInterface;
+
+use Psr\Log\LoggerAwareInterface;
+
 /**
  * E-Ngine API Client
  *
@@ -10,12 +14,11 @@ namespace CAC\Component\ESP\Adapter\Engine;
  * @author Crazy Awesome Company <info@crazyawesomecompany.com>
  *
  * @todo Implement `Mailinglist_getUnsubscriptionsAsCSV`
- * @todo Implement `Subscriber_getByEmail`
  * @todo Implement `Subscriber_getByUniqueID`
  * @todo Implement `Subscriber_sendMailingToSubscribers`
  *
  */
-class EngineApi
+class EngineApi implements LoggerAwareInterface
 {
     /**
      * Api connection
@@ -97,6 +100,18 @@ class EngineApi
     }
 
     /**
+     * Get all mailinglists of the account
+     *
+     * @return array
+     */
+    public function getMailinglists()
+    {
+        $result = $this->performRequest('Mailinglist_all');
+
+        return $result;
+    }
+
+    /**
      * Get all unsubscriptions from a mailingslist of a specific time period
      *
      * @param integer   $mailinglistId
@@ -125,20 +140,54 @@ class EngineApi
     }
 
     /**
+     * Get Mailinglist Subscriber information
+     *
+     * @param integer $mailinglistId
+     * @param string  $email
+     *
+     * @return array
+     */
+    public function getMailinglistUser($mailinglistId, $email)
+    {
+        $result = $this->performRequest(
+            'Subscriber_getByEmail',
+            $email,
+            array('email', 'firstname', 'infix', 'lastname'),
+            $mailinglistId
+        );
+
+        return $result;
+    }
+
+    /**
      * Perform the SOAP request against the E-Ngine webservice
      *
      * @param string $method The method to call
      * @param mixed  ...     Additional parameters
      *
      * @return mixed
+     *
+     * @throws EngineApiException Converted SoapFault Exception
      */
     protected function performRequest($method) {
-        // TODO Perform the SOAP request
+        // Perform the SOAP request
         $args = func_get_args();
         // remove method argument
         array_shift($args);
 
-        $result = call_user_func_array(array($this->getConnection(), $method), $args);
+        try {
+            if ($this->logger) {
+                $this->logger->debug(sprintf("E-Ngine API call: %s -> %s", $method, json_encode($args)));
+            }
+
+            $result = call_user_func_array(array($this->getConnection(), $method), $args);
+        } catch (\SoapFault $e) {
+            if ($this->logger) {
+                $this->logger->error(sprintf("E-Ngine API error: %s", $e->getMessage()));
+            }
+            // Convert to EngineApiException
+            throw new EngineApiException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
 
         return $result;
     }
@@ -167,5 +216,15 @@ class EngineApi
         }
 
         return $this->connection;
+    }
+
+    /**
+     * Set the logger
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

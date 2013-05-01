@@ -13,5 +13,19 @@
             "\\CAC\\Component\\ESP": "lib/"
         },
         "classmap": [ "lib/" ]
-    }
+    },
+    "require": {
+        "psr/log": ">=1"
+    },
+    "suggest": {
+        "monolog/monolog": "Adds logging abilities"
+    },
+    "authors": [
+        {
+            "name": "Nick de Groot",
+            "email": "nick@crazyawesomecompany.com",
+            "homepage": "http://www.crazyawesomecompany.com",
+            "role": "Developer"
+        }
+    ]
 }

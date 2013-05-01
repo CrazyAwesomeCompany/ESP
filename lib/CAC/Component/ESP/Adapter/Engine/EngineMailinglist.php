@@ -65,12 +65,30 @@ class EngineMailinglist implements MailinglistAdapterInterface
         return $this->api->unsubscribeUser($user['email'], $mailinglistId, $confirmed);
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see \CAC\Component\ESP\MailinglistAdapterInterface::getUnsubscriptions()
+     */
     public function getUnsubscriptions($options = array()) {
-        // TODO: Auto-generated method stub
-        $from = new \DateTime();
-        $from->sub(new \DateInterval('P1D'));
+        $options = array_replace_recursive(
+            array(
+                'mailinglist' => '',
+                'from' => null,
+                'till' => null
+            ),
+            $this->options,
+            $options
+        );
 
-        return $this->api->getMailinglistUnsubscriptions($this->options['mailinglist'], $from);
+        if (!($options['from'] instanceof \DateTime)) {
+            $options['from'] = new \DateTime($options['from']);
+        }
+
+        if (!($options['till'] instanceof \DateTime)) {
+            $options['till'] = new \DateTime($options['till']);
+        }
+
+        return $this->api->getMailinglistUnsubscriptions($options['mailinglist'], $options['from'], $options['till']);
     }
 
 }
