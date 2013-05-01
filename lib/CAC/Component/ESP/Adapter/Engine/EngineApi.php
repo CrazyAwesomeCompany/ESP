@@ -3,7 +3,6 @@
 namespace CAC\Component\ESP\Adapter\Engine;
 
 use Psr\Log\LoggerInterface;
-
 use Psr\Log\LoggerAwareInterface;
 
 /**
@@ -26,6 +25,11 @@ class EngineApi implements LoggerAwareInterface
      * @var \SoapClient
      */
     private $connection;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * Api configuration
