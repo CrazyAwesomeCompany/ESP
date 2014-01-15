@@ -8,7 +8,7 @@ class MailClient
     /**
      * The ESP Adapter
      *
-     * @var MailInterface
+     * @var MailAdapterInterface
      */
     private $adapter;
 
@@ -17,7 +17,8 @@ class MailClient
         $this->adapter = $adapter;
     }
 
-
-
-
+    public function send(array $users, $subject, $body)
+    {
+        return $this->adapter->send($users, $subject, $body);
+    }
 }

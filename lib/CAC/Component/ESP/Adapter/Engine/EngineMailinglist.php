@@ -3,6 +3,7 @@
 namespace CAC\Component\ESP\Adapter\Engine;
 
 use CAC\Component\ESP\MailinglistAdapterInterface;
+use CAC\Component\ESP\Api\Engine\EngineApi;
 
 class EngineMailinglist implements MailinglistAdapterInterface
 {

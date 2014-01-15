@@ -15,9 +15,10 @@
         "classmap": [ "lib/" ]
     },
     "require": {
-        "psr/log": ">=1"
+        "psr/log": ">=1",
     },
     "suggest": {
+        "cac/esp-api-engine": "Needed when using E-Ngine as ESP",
         "monolog/monolog": "Adds logging abilities"
     },
     "authors": [
