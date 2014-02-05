@@ -21,6 +21,6 @@ class MockMail implements MailAdapterInterface
      */
     public function sendByTemplate($templateId, array $users, $subject = null, $params = array())
     {
-        return true
+        return true;
     }
 }
