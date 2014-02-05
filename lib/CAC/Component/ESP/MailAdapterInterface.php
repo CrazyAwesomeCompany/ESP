@@ -23,5 +23,5 @@ interface MailAdapterInterface
      *
      * @return boolean
      */
-    public function sendByTemplate($templateId, array $users, $params = array());
+    public function sendByTemplate($templateId, array $users, $subject = null, $params = array());
 }

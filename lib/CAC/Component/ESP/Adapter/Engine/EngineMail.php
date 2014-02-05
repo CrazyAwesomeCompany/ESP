@@ -46,8 +46,16 @@ class EngineMail implements MailAdapterInterface
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplate()
      */
-    public function sendByTemplate($templateId, array $users, $params = array())
+    public function sendByTemplate($templateId, array $users, $subject = null, $params = array())
     {
-        throw new ESPException('Not implemented');
+        $mailingId = $this->api->createMailingFromTemplate(
+            $templateId,
+            $subject,
+            $this->options['fromName'],
+            $this->options['fromEmail'],
+            $this->options['replyTo']
+        );
+
+        return (bool) $this->api->sendMailing($mailingId, $users);
     }
 }
