@@ -14,13 +14,15 @@ class EngineMailinglist implements MailinglistAdapterInterface
 
     private $options = array();
 
-    public function __construct(EngineApi $api)
+    public function __construct(EngineApi $api, $options = array())
     {
         $this->api = $api;
-        $this->options = array(
-            'mailinglist' => 2,
-            'confirmed' => false,
-
+        $this->options = array_replace_recursive(
+            array(
+                'mailinglist' => null,
+                'confirmed' => false,
+            ),
+            $options
         );
     }
 

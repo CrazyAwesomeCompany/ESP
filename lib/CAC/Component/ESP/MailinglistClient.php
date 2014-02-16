@@ -40,6 +40,8 @@ class MailinglistClient implements LoggerAwareInterface
     public function unsubscribe(array $user)
     {
         $result = $this->adapter->unsubscribe($user);
+
+        return $result;
     }
 
     /**
