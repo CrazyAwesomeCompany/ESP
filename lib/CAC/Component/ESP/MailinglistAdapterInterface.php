@@ -26,5 +26,13 @@ interface MailinglistAdapterInterface
      */
     public function getUnsubscriptions($options = array());
 
+    /**
+     * Get a subscriber from a mailinglist
+     *
+     * @param string $email
+     * @param array $fields
+     * @param string $mailinglistId
+     */
+    public function getSubscriber($email, array $fields = array(), $mailinglistId = null);
 
 }
