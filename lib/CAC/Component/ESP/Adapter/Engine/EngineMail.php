@@ -21,6 +21,11 @@ class EngineMail implements MailAdapterInterface
 
     public function __construct(EngineApi $api, array $options = array())
     {
+        if (isset($options['templates']) && !isset($options['templates']['default'])) {
+            // BC-Compatible: add the templates to the default group
+            $options['templates']['default'] = $options['templates'];
+        }
+
         $this->api = $api;
         $this->options = array_replace_recursive(
             array(
@@ -57,12 +62,16 @@ class EngineMail implements MailAdapterInterface
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplate()
      */
-    public function sendByTemplate($templateId, array $users, $subject = null, $params = array())
+    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), $group = 'default')
     {
         if (!is_numeric($templateId)) {
-            $template = $this->findTemplateByName($templateId);
+            $template = $this->findTemplateByName($templateId, $group);
             $templateId = $template['id'];
             $subject = $template['subject'];
+
+            if (isset($template['mailinglist'])) {
+                $this->api->selectMailinglist($template['mailinglist']);
+            }
         }
 
         for ($i = 0; $i < count($users); $i++) {
@@ -84,14 +93,32 @@ class EngineMail implements MailAdapterInterface
      * Find a template by name
      *
      * @param string $name
+     * @param string $group
      * @throws ESPException
      */
-    private function findTemplateByName($name)
+    private function findTemplateByName($name, $group = 'default')
     {
         if (!array_key_exists($name, $this->options['templates'])) {
             throw new ESPException("Template configuration could not be found");
         }
 
-        return $this->options['templates'][$name];
+        return $this->options['templates'][$group][$name];
+    }
+
+    /**
+     * Add a new template
+     *
+     * @param string $name
+     * @param integer $id
+     * @param string $subject
+     * @param string $group
+     */
+    public function addTemplate($name, $id, $subject, $group = 'default')
+    {
+        if (!array_key_exists($group, $this->options['templates'])) {
+            $this->options['templates'][$group] = array();
+        }
+
+        $this->options['templates'][$group][$name] = array('id' => $id, 'subject' => $subject);
     }
 }

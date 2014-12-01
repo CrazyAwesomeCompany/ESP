@@ -22,8 +22,8 @@ class MailClient
         return $this->adapter->send($users, $subject, $body);
     }
 
-    public function sendByTemplate($templateId, array $users, $subject)
+    public function sendByTemplate($templateId, array $users, $subject, $group = 'default')
     {
-        return $this->adapter->sendByTemplate($templateId, $users, $subject);
+        return $this->adapter->sendByTemplate($templateId, $users, $subject, $group);
     }
 }
