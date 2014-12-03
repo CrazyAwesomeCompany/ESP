@@ -86,7 +86,7 @@ class EngineMail implements MailAdapterInterface
             $this->options['replyTo']
         );
 
-        return (bool) $this->api->sendMailing($mailingId, $users);
+        return (bool) $this->api->sendMailing($mailingId, $users, null, (isset($template['mailinglist']) ? $template['mailinglist'] : null));
     }
 
     /**
