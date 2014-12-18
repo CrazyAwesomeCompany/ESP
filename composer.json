@@ -15,6 +15,7 @@
         "classmap": [ "lib/" ]
     },
     "require": {
+        "neitanod/forceutf8": "~1.4",
         "psr/log": ">=1"
     },
     "suggest": {
