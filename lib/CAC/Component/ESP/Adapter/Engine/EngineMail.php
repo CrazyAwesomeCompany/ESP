@@ -6,6 +6,7 @@ namespace CAC\Component\ESP\Adapter\Engine;
 use CAC\Component\ESP\Api\Engine\EngineApi;
 use CAC\Component\ESP\ESPException;
 use CAC\Component\ESP\MailAdapterInterface;
+use \ForceUTF8\Encoding;
 
 class EngineMail implements MailAdapterInterface
 {
@@ -49,8 +50,8 @@ class EngineMail implements MailAdapterInterface
         $mailingId = $this->api->createMailingFromContent(
             $body,
             $body,
-            $subject,
-            $this->options['fromName'],
+            Encoding::toLatin1($subject),
+            Encoding::toLatin1($this->options['fromName']),
             $this->options['fromEmail'],
             $this->options['replyTo']
         );
@@ -80,8 +81,8 @@ class EngineMail implements MailAdapterInterface
 
         $mailingId = $this->api->createMailingFromTemplate(
             $templateId,
-            $subject,
-            $this->options['fromName'],
+            Encoding::toLatin1($subject),
+            Encoding::toLatin1($this->options['fromName']),
             $this->options['fromEmail'],
             $this->options['replyTo']
         );
