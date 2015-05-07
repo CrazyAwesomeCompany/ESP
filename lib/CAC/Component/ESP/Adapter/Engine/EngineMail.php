@@ -91,6 +91,35 @@ class EngineMail implements MailAdapterInterface
     }
 
     /**
+     * (non-PHPdoc)
+     * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplateWithAttachment()
+     */
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $group = 'default', $attachments = array())
+    {
+        if (!is_numeric($templateId)) {
+            $template = $this->findTemplateByName($templateId, $group);
+            $templateId = $template['id'];
+            $subject = $template['subject'];
+
+            if (isset($template['mailinglist'])) {
+                $this->api->selectMailinglist($template['mailinglist']);
+            }
+        }
+
+        $user = array_merge($this->options['globals'], $user[0]);
+
+        $mailingId = $this->api->createMailingFromTemplate(
+            $templateId,
+            Encoding::toLatin1($subject),
+            Encoding::toLatin1($this->options['fromName']),
+            $this->options['fromEmail'],
+            $this->options['replyTo']
+        );
+
+        return (bool) $this->api->sendMailingWithAttachment($mailingId, $user, null, (isset($template['mailinglist']) ? $template['mailinglist'] : null), $attachments);
+    }
+
+    /**
      * Find a template by name
      *
      * @param string $name

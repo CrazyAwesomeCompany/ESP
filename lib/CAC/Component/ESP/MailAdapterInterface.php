@@ -24,4 +24,16 @@ interface MailAdapterInterface
      * @return boolean
      */
     public function sendByTemplate($templateId, array $users, $subject = null, $params = array());
+
+    /**
+     * Send an Email based on a template at the ESP
+     *
+     * @param integer|string $templateId
+     * @param array          $user
+     * @param array          $params
+     * @param array          $attachments
+     *
+     * @return boolean
+     */
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $attachments = array());
 }

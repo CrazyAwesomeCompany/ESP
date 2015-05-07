@@ -26,4 +26,9 @@ class MailClient
     {
         return $this->adapter->sendByTemplate($templateId, $users, $subject, array(), $group);
     }
+
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject, $group = 'default', $attachments = array())
+    {
+        return $this->adapter->sendByTemplateWithAttachment($templateId, $user, $subject, array(), $group, $attachments);
+    }
 }

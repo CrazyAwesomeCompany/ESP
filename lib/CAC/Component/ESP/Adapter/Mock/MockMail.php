@@ -23,4 +23,13 @@ class MockMail implements MailAdapterInterface
     {
         return true;
     }
+
+    /**
+     * (non-PHPdoc)
+     * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplateWithAttachment()
+     */
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $attachments = array())
+    {
+        return true;
+    }
 }
