@@ -33,6 +33,7 @@ class EngineMail implements MailAdapterInterface
                 'fromName' => 'Crazy Awesome ESP',
                 'fromEmail' => 'changeme@crazyawesomecompany.com',
                 'replyTo' => null,
+                'options' => array(),
                 'templates' => array(),
                 'globals' => array()
             ),
@@ -51,9 +52,9 @@ class EngineMail implements MailAdapterInterface
             $body,
             $body,
             Encoding::toLatin1($subject),
-            Encoding::toLatin1($this->options['fromName']),
-            $this->options['fromEmail'],
-            $this->options['replyTo']
+            Encoding::toLatin1($this->getOption('fromName')),
+            $this->getOption('fromEmail'),
+            $this->getOption('replyTo')
         );
 
         return (bool) $this->api->sendMailing($mailingId, $users);
@@ -76,15 +77,15 @@ class EngineMail implements MailAdapterInterface
         }
 
         for ($i = 0; $i < count($users); $i++) {
-            $users[$i] = array_merge($this->options['globals'], $users[$i]);
+            $users[$i] = array_merge($this->getOption('globals', $group), $users[$i]);
         }
 
         $mailingId = $this->api->createMailingFromTemplate(
             $templateId,
             Encoding::toLatin1($subject),
-            Encoding::toLatin1($this->options['fromName']),
-            $this->options['fromEmail'],
-            $this->options['replyTo']
+            Encoding::toLatin1($this->getOption('fromName', $group)),
+            $this->getOption('fromEmail', $group),
+            $this->getOption('replyTo', $group)
         );
 
         return (bool) $this->api->sendMailing($mailingId, $users, null, (isset($template['mailinglist']) ? $template['mailinglist'] : null));
@@ -106,14 +107,14 @@ class EngineMail implements MailAdapterInterface
             }
         }
 
-        $user = array_merge($this->options['globals'], $user[0]);
+        $user = array_merge($this->getOption('globals', $group), $user[0]);
 
         $mailingId = $this->api->createMailingFromTemplate(
             $templateId,
             Encoding::toLatin1($subject),
-            Encoding::toLatin1($this->options['fromName']),
-            $this->options['fromEmail'],
-            $this->options['replyTo']
+            Encoding::toLatin1($this->getOption('fromName', $group)),
+            $this->getOption('fromEmail', $group),
+            $this->getOption('replyTo', $group)
         );
 
         return (bool) $this->api->sendMailingWithAttachment($mailingId, $user, null, (isset($template['mailinglist']) ? $template['mailinglist'] : null), $attachments);
@@ -150,5 +151,29 @@ class EngineMail implements MailAdapterInterface
         }
 
         $this->options['templates'][$group][$name] = array('id' => $id, 'subject' => $subject);
+    }
+
+    /**
+     * Get a configuration option
+     *
+     * @param string $name
+     * @param string $group
+     * @throws ESPException
+     * @return string
+     */
+    protected function getOption($name, $group = 'default')
+    {
+        // Check if specific group has the option set
+        if (array_key_exists($group, $this->options['options']) && isset($this->options['options'][$group][$name])) {
+            return $this->options['options'][$group][$name];
+        }
+
+        // fallback to the default
+        if (array_key_exists($name, $this->options)) {
+            return $this->options[$name];
+        }
+        print_r($this->options); exit;
+        // Invalid option
+        throw new ESPException(sprintf("Invalid option requested. No option found [%s:%s]", $group, $name));
     }
 }
