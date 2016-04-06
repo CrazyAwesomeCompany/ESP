@@ -24,7 +24,7 @@ interface MailAdapterInterface
      *
      * @return boolean
      */
-    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), \DateTime $date);
+    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), $group = 'default', \DateTime $date = null);
 
     /**
      * Send an Email based on a template at the ESP
@@ -37,5 +37,5 @@ interface MailAdapterInterface
      *
      * @return boolean
      */
-    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $attachments = array(), \DateTime $date);
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $attachments = array(), $group = 'default', \DateTime $date = null);
 }
