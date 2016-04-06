@@ -129,8 +129,8 @@ class EngineMail implements MailAdapterInterface
      */
     private function findTemplateByName($name, $group = 'default')
     {
-        if (!array_key_exists($name, $this->options['templates'][$group])) {
-            throw new ESPException("Template configuration could not be found");
+        if (!array_key_exists($group, $this->options['templates']) || !array_key_exists($name, $this->options['templates'][$group])) {
+            throw new ESPException(sprintf("Template configuration for group %s could not be found", $group));
         }
 
         return $this->options['templates'][$group][$name];
