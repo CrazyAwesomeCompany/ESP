@@ -22,13 +22,13 @@ class MailClient
         return $this->adapter->send($users, $subject, $body);
     }
 
-    public function sendByTemplate($templateId, array $users, $subject, $group = 'default')
+    public function sendByTemplate($templateId, array $users, $subject, $group = 'default', \DateTime $date = null)
     {
-        return $this->adapter->sendByTemplate($templateId, $users, $subject, array(), $group);
+        return $this->adapter->sendByTemplate($templateId, $users, $subject, array(), $group, $date);
     }
 
-    public function sendByTemplateWithAttachment($templateId, array $user, $subject, $group = 'default', $attachments = array())
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject, $group = 'default', $attachments = array(), \DateTime $date = null)
     {
-        return $this->adapter->sendByTemplateWithAttachment($templateId, $user, $subject, array(), $group, $attachments);
+        return $this->adapter->sendByTemplateWithAttachment($templateId, $user, $subject, array(), $group, $attachments, $date);
     }
 }

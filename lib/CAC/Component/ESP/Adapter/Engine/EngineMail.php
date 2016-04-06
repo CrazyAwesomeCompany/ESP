@@ -64,7 +64,7 @@ class EngineMail implements MailAdapterInterface
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplate()
      */
-    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), $group = 'default')
+    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), $group = 'default', \DateTime $date = null)
     {
         if (!is_numeric($templateId)) {
             $template = $this->findTemplateByName($templateId, $group);
@@ -88,14 +88,14 @@ class EngineMail implements MailAdapterInterface
             $this->getOption('replyTo', $group)
         );
 
-        return (bool) $this->api->sendMailing($mailingId, $users, null, (isset($template['mailinglist']) ? $template['mailinglist'] : null));
+        return (bool) $this->api->sendMailing($mailingId, $users, $date, (isset($template['mailinglist']) ? $template['mailinglist'] : null));
     }
 
     /**
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplateWithAttachment()
      */
-    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $group = 'default', $attachments = array())
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $group = 'default', $attachments = array(), \DateTime $date = null)
     {
         if (!is_numeric($templateId)) {
             $template = $this->findTemplateByName($templateId, $group);
@@ -117,7 +117,7 @@ class EngineMail implements MailAdapterInterface
             $this->getOption('replyTo', $group)
         );
 
-        return (bool) $this->api->sendMailingWithAttachment($mailingId, $user, null, (isset($template['mailinglist']) ? $template['mailinglist'] : null), $attachments);
+        return (bool) $this->api->sendMailingWithAttachment($mailingId, $user, $date, (isset($template['mailinglist']) ? $template['mailinglist'] : null), $attachments);
     }
 
     /**
