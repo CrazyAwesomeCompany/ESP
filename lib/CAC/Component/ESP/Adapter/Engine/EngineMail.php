@@ -64,7 +64,7 @@ class EngineMail implements MailAdapterInterface
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplate()
      */
-    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), $group = 'default', \DateTime $date = null)
+    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), $group = 'default', \DateTime $date = null, $fromEmail = null, $replyTo = null)
     {
         if (!is_numeric($templateId)) {
             $template = $this->findTemplateByName($templateId, $group);
@@ -84,8 +84,8 @@ class EngineMail implements MailAdapterInterface
             $templateId,
             Encoding::toLatin1($subject),
             Encoding::toLatin1($this->getOption('fromName', $group)),
-            $this->getOption('fromEmail', $group),
-            $this->getOption('replyTo', $group)
+            isset($fromEmail) ? $fromEmail : $this->getOption('fromEmail', $group),
+            isset($replyTo) ? $replyTo : $this->getOption('replyTo', $group)
         );
 
         return (bool) $this->api->sendMailing($mailingId, $users, $date, (isset($template['mailinglist']) ? $template['mailinglist'] : null));
@@ -95,7 +95,7 @@ class EngineMail implements MailAdapterInterface
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplateWithAttachment()
      */
-    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $group = 'default', $attachments = array(), \DateTime $date = null)
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $group = 'default', $attachments = array(), \DateTime $date = null, $fromEmail = null, $replyTo = null)
     {
         if (!is_numeric($templateId)) {
             $template = $this->findTemplateByName($templateId, $group);
@@ -113,8 +113,8 @@ class EngineMail implements MailAdapterInterface
             $templateId,
             Encoding::toLatin1($subject),
             Encoding::toLatin1($this->getOption('fromName', $group)),
-            $this->getOption('fromEmail', $group),
-            $this->getOption('replyTo', $group)
+            isset($fromEmail) ? $fromEmail : $this->getOption('fromEmail', $group),
+            isset($replyTo) ? $replyTo : $this->getOption('replyTo', $group)
         );
 
         return (bool) $this->api->sendMailingWithAttachment($mailingId, $user, $date, (isset($template['mailinglist']) ? $template['mailinglist'] : null), $attachments);
