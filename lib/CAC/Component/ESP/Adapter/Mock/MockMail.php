@@ -19,7 +19,7 @@ class MockMail implements MailAdapterInterface
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplate()
      */
-    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), \DateTime $date = null)
+    public function sendByTemplate($templateId, array $users, $subject = null, $params = array(), \DateTime $date = null, $fromEmail = null, $replyTo = null)
     {
         return true;
     }
@@ -28,7 +28,7 @@ class MockMail implements MailAdapterInterface
      * (non-PHPdoc)
      * @see \CAC\Component\ESP\MailAdapterInterface::sendByTemplateWithAttachment()
      */
-    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $attachments = array(), \DateTime $date = null)
+    public function sendByTemplateWithAttachment($templateId, array $user, $subject = null, $params = array(), $attachments = array(), \DateTime $date = null, $fromEmail = null, $replyTo = null)
     {
         return true;
     }
