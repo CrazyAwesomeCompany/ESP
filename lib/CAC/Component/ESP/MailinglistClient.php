@@ -3,11 +3,7 @@
 namespace CAC\Component\ESP;
 
 use Psr\Log\LoggerInterface;
-
-use Psr\Log\setLogger;
-
 use Psr\Log\LoggerAwareInterface;
-
 use CAC\Component\ESP\MailinglistAdapterInterface;
 
 class MailinglistClient implements LoggerAwareInterface

@@ -2,14 +2,16 @@
 
 namespace CAC\Component\ESP\Adapter\Engine;
 
-
 use CAC\Component\ESP\Api\Engine\EngineApi;
 use CAC\Component\ESP\ESPException;
 use CAC\Component\ESP\MailAdapterInterface;
 use \ForceUTF8\Encoding;
+use CAC\Component\ESP\Adapter\TemplatingTrait;
 
 class EngineMail implements MailAdapterInterface
 {
+    use TemplatingTrait;
+
     /**
      * @var EngineApi
      */
@@ -18,7 +20,7 @@ class EngineMail implements MailAdapterInterface
     /**
      * @var array
      */
-    private $options;
+    protected $options;
 
     public function __construct(EngineApi $api, array $options = array())
     {
@@ -118,62 +120,5 @@ class EngineMail implements MailAdapterInterface
         );
 
         return (bool) $this->api->sendMailingWithAttachment($mailingId, $user, $date, (isset($template['mailinglist']) ? $template['mailinglist'] : null), $attachments);
-    }
-
-    /**
-     * Find a template by name
-     *
-     * @param string $name
-     * @param string $group
-     * @throws ESPException
-     */
-    private function findTemplateByName($name, $group = 'default')
-    {
-        if (!array_key_exists($group, $this->options['templates']) || !array_key_exists($name, $this->options['templates'][$group])) {
-            throw new ESPException(sprintf("Template configuration for group %s could not be found", $group));
-        }
-
-        return $this->options['templates'][$group][$name];
-    }
-
-    /**
-     * Add a new template
-     *
-     * @param string $name
-     * @param integer $id
-     * @param string $subject
-     * @param string $group
-     */
-    public function addTemplate($name, $id, $subject, $group = 'default')
-    {
-        if (!array_key_exists($group, $this->options['templates'])) {
-            $this->options['templates'][$group] = array();
-        }
-
-        $this->options['templates'][$group][$name] = array('id' => $id, 'subject' => $subject);
-    }
-
-    /**
-     * Get a configuration option
-     *
-     * @param string $name
-     * @param string $group
-     * @throws ESPException
-     * @return string
-     */
-    protected function getOption($name, $group = 'default')
-    {
-        // Check if specific group has the option set
-        if (array_key_exists($group, $this->options['options']) && isset($this->options['options'][$group][$name])) {
-            return $this->options['options'][$group][$name];
-        }
-
-        // fallback to the default
-        if (array_key_exists($name, $this->options)) {
-            return $this->options[$name];
-        }
-        print_r($this->options); exit;
-        // Invalid option
-        throw new ESPException(sprintf("Invalid option requested. No option found [%s:%s]", $group, $name));
     }
 }
